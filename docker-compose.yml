@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: gender_db
+    restart: always
+    environment:
+      POSTGRES_DB: genderdb
+      POSTGRES_USER: genderuser
+      POSTGRES_PASSWORD: genderpass
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    container_name: gender_api
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: genderdb
+      DB_USER: genderuser
+      DB_PASSWORD: genderpass
+      OLLAMA_URL: http://host.docker.internal:11434
+    ports:
+      - "8001:8001"
